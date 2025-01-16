@@ -1,0 +1,99 @@
+@startuml states_class_diagram
+scale 600 width
+
+abstract class State {
+	+ Enter(void *const)
+	+ Initial(void *const)
+  + Exit(void *const)
+  + PreHook(void *const)
+  + PostHook(void *const)
+	+ HandleEvent(void *const, Event const *const)
+	+ HandleDefault(void *const, Event const *const)
+}
+
+class Root {
+	# Enter(void *const)
+	# Initial(void *const)
+  # Exit(void *const)
+  # PreHook(void *const)
+  # PostHook(void *const)
+	# HandleEvent(void *const, Event const *const) final
+	# HandleDefault(void *const, Event const *const) final
+  # HandleIgnitionOn(void *const, Event const *const)
+  # HandleIgnitionOff(void *const, Event const *const)
+  # HandleAutoCmdOn(void *const, Event const *const)
+  # HandleAutoCmdOff(void *const, Event const *const)
+  # HandleParkingCmdOn(void *const, Event const *const)
+  # HandleParkingCmdOff(void *const, Event const *const)
+  # HandleObstacleDetected(void *const, Event const *const)
+  # HandleObstacleCleared(void *const, Event const *const)
+  # HandleClearLane(void *const, Event const *const)
+  # HandleBusyLane(void *const, Event const *const)
+  # HandleSpotFound(void *const, Event const *const)
+  # HandleParkingActionTimeout(void *const, Event const *const)
+  # HandleManeuverSuccessful(void *const, Event const *const)
+}
+
+class Sleeping {
+  # HandleIgnitionOn()
+}
+
+class Operating {
+  # HandleObstacleDetected()
+  # HandleObstacleCleared()
+  # HandleClearLane()
+  # HandleBusyLane()
+}
+
+class ManualDriving {
+  # HandleIgnitionOff()
+  # HandleAutoCmdOn()
+  # HandleParkingCmdOn()
+}
+
+class AutoDriving {
+  # HandleAutoCmdOff()
+}
+
+class Cruising {
+  # HandleBusyLane()
+  # HandleObstacleDetected()
+}
+
+class Overtaking {
+  # HandleClearLane()
+  # HandleObstacleDetected()
+}
+
+class EmergHandling {
+  # HandleObstacleCleared()
+}
+
+class AutoParking {
+  # HandleParkingCmdOn()
+  # HandleParkingCmdOff()
+  # HandleParkingActionTimeout()
+  # HandleObstacleDetected()
+}
+
+class SpotSearching {
+  # HandleSpotFound()
+}
+
+class Maneuvering {
+  # HandleManeuverSuccessful()
+}
+
+State <|-- Root
+Root <|-- Sleeping
+Root <|-- Operating
+Operating <|-- ManualDriving
+Operating <|-- AutoDriving
+Operating <|-- AutoParking
+AutoDriving <|-- Cruising
+AutoDriving <|-- Overtaking
+AutoDriving <|-- EmergHandling
+AutoParking <|-- SpotSearching
+AutoParking <|-- Maneuvering
+
+@enduml

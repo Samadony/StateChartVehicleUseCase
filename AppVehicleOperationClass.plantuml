@@ -1,0 +1,45 @@
+@startuml AppVehicleOperation_class_diagram
+scale 1000 width
+
+class StateChart{
+  --public--
+  + StateChart()
+  + ~StateChart()
+  --private--
+}
+
+class AppVehicleOperation{
+  --public--
+  + AppVehicleOperation()
+  + ~AppVehicleOperation()
+  --private--
+  - {static} Root root
+  - {static} Sleeping sleeping
+  - {static} Operating operating
+  - {static} ManualDriving manualDriving
+  - {static} AutoDriving autoDriving
+  - {static} AutoParking autoParking
+  - {static} Cruising cruising
+  - {static} Overtaking overtaking
+  - {static} EmergHandling emergHandling
+  - {static} SpotSearching spotSearching
+  - {static} Maneuvering maneuvering
+}
+note right of AppVehicleOperation: **TIP**\nYou can avoid freindship by providing interfaces needed by the states\nto handle the context's private data providing more encabsulation
+note left of AppVehicleOperation: All states are friends of AppVehicleOperation\nAll instances of the (sub)states are static 
+
+
+StateChart <|-- AppVehicleOperation
+AppVehicleOperation --> Root : <<friend>>
+AppVehicleOperation --> Sleeping : <<friend>>
+AppVehicleOperation --> Operating : <<friend>>
+AppVehicleOperation --> ManualDriving : <<friend>>
+AppVehicleOperation --> AutoDriving : <<friend>>
+AppVehicleOperation --> AutoParking : <<friend>>
+AppVehicleOperation --> Cruising : <<friend>>
+AppVehicleOperation --> Overtaking : <<friend>>
+AppVehicleOperation --> EmergHandling : <<friend>>
+AppVehicleOperation --> SpotSearching : <<friend>>
+AppVehicleOperation --> Maneuvering : <<friend>>
+
+@enduml

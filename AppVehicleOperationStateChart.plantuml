@@ -1,0 +1,47 @@
+@startuml vehicle_statechart
+scale 800 width
+
+state Top{
+  
+  [*] -> Sleeping
+  Sleeping --> Operating : IgnitionOn
+}
+
+state Operating{
+  [*] -> ManualDriving
+  ManualDriving -> Sleeping : IgnitionOff
+  ManualDriving --> AutoDriving : AutoCmdOn
+  AutoDriving --> ManualDriving : AutoCmdOff
+  ManualDriving --> AutoParking : ParkingCmdOn
+  AutoParking --> ManualDriving : ParkingCmdOff || ParkingTimeout || ParkingSuccessful
+}
+
+state AutoDriving {
+  [*] -> Cruising
+  EmergHandling --> [H] : ObstacleCleared
+  Cruising -> EmergHandling : ObstacleDetected
+  Overtaking -> EmergHandling : ObstacleDetected
+  Cruising -> Overtaking : BusyLane
+  Overtaking -> Cruising : ClearLane
+}
+
+state AutoParking {
+  [*] -> SpotSearching
+  SpotSearching -> SpotSearching : ParkingCmdOn
+  SpotSearching -> Maneuvering : SpotFound
+  Maneuvering --> SpotSearching : ObstacleDetected || ParkingCmdOn
+}
+
+Top: In Tree Hierarchy, Top is the Root State
+Sleeping: - A Leaf Node in the Behavior Tree\n- Vehicles Low Power Mode
+Operating: A SuperState of ManualDriving, AutoDriving, AutoParking\n
+ManualDriving: Where the driver is in control of the vehicle
+AutoDriving: SuperState of Cruising, Overtaking, EmergHandling\n Handles the autonomous driving
+Cruising: Vehicle is cruising in the lane
+Overtaking: Vehicle is overtaking another vehicle
+EmergHandling: Vehicle is handling an emergency
+AutoParking: - SuperState of SpotSearching, Maneuvering\n- Handles the autonomous parking
+SpotSearching: Vehicle is searching for a parking spot
+Maneuvering: Vehicle is maneuvering to park
+ 
+@enduml
